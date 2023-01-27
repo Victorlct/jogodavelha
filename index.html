@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogo da Velha</title>
+
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <div class="bg-img">
+        <header>
+            Jogo da velha
+            <div id="turn" class="turn"></div>
+        </header>
+
+        <main>
+            <div class="divback">
+                <div class="tableback">
+                    <table id="board" class="board">
+                        <tr>
+                            <td id="0-0"></td>
+                            <td id="0-1"></td>
+                            <td id="0-2"></td>
+                        </tr>
+                        <tr>
+                            <td id="1-0"></td>
+                            <td id="1-1"></td>
+                            <td id="1-2"></td>
+                        </tr>
+                        <tr>
+                            <td id="2-0"></td>
+                            <td id="2-1"></td>
+                            <td id="2-2"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <button id="reset-btn" class="button-19" role="button">Reiniciar jogo</button>
+        </main>
+    </div>
+    <script>
+        var board = [['', '', ''], ['', '', ''], ['', '', '']];
+        var player = 'X';
+        var gameOver = false;
+        var turn = "X";
+        document.getElementById("turn").innerHTML = turn + ": é sua vez de jogar";
+
+        function play(row, col) {
+            if (gameOver) {
+
+            } else {
+                event.target.innerHTML = turn;
+                if (board[row][col] === '') {
+                    board[row][col] = player;
+                    document.getElementById(row + '-' + col).innerHTML = player;
+                    if (checkWin(player)) {
+                        alert(player + ' ganhou!');
+                        gameOver = true;
+                    } else if (checkTie()) {
+                        alert('Empate!');
+                        gameOver = true;
+                    } else {
+                        player = (player === 'X') ? 'O' : 'X';
+                    }
+                    switchTurn();
+                    document.getElementById("turn").innerHTML = turn + ": é sua vez de jogar";
+                } else {
+                    alert('Jogada inválida.');
+                }
+            }
+        }
+
+        function checkWin(player) {
+            // verifica as linhas
+            for (var i = 0; i < 3; i++) {
+                if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
+                    return true;
+                }
+            }
+            // verifica as colunas 
+            for (var i = 0; i < 3; i++) {
+                if (board[0][i] === player && board[1][i] === player && board[2][i] === player) {
+                    return true;
+                }
+            }
+            // verifica as diagonais
+            if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
+                return true;
+            }
+            if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
+                return true;
+            }
+            return false;
+        }
+
+        function checkTie() {
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 3; j++) {
+                    if (board[i][j] === '') {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function switchTurn() {
+            if (turn === "X") {
+                turn = "O";
+            } else {
+                turn = "X";
+            }
+        }
+
+        function resetGame() {
+            board = [['', '', ''], ['', '', ''], ['', '', '']];
+            player = 'X';
+            gameOver = false;
+            turn = "X";
+            document.getElementById("turn").innerHTML = turn + ": é sua vez de jogar";
+            var cells = document.getElementsByTagName("td");
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].innerHTML = ""
+            }
+        };
+
+        document.getElementById('board').addEventListener('click', function (e) {
+            var coordinates = e.target.id.split('-');
+            var row = parseInt(coordinates[0]);
+            var col = parseInt(coordinates[1]);
+            play(row, col);
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', function () {
+            resetGame();
+        });
+
+    </script>
+
+    <footer>
+
+    </footer>
+</body>
+
+</html>
